@@ -82,21 +82,3 @@ func TestClient_GetCatalog(t *testing.T) {
 		t.FailNow()
 	}
 }
-
-func TestClient_CreateOrder(t *testing.T) {
-	req := &tangocard.CreateOrderCriteria{
-		AccountIdentifier:  "test",
-		Amount:             50.0,
-		CustomerIdentifier: "test",
-		UTID:               "U12345",
-	}
-
-	client := tangocard.NewClient(
-		"",
-		"",
-		nil,
-	)
-	res, err := client.CreateOrder(req)
-	fmt.Println(err)
-	fmt.Println(res)
-}

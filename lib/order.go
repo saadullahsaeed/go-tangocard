@@ -1,5 +1,9 @@
 package tangocard
 
+const (
+	keyRedemptionURL = "Redemption URL"
+)
+
 // Denomination struct represents the amount charge for the order
 type Denomination struct {
 	CurencyCode  string  `json:"currencyCode"`
@@ -28,6 +32,12 @@ type Reward struct {
 	CredentialList         []Credential      `json:"credentialList"`
 	Credentials            map[string]string `json:"credentials"`
 	RedemptionInstructions string            `json:"redemptionInstructions"`
+}
+
+// HasRedemptionURL checks if the credentials have a redemption URL
+func (r *Reward) HasRedemptionURL() bool {
+	url, found := r.Credentials[keyRedemptionURL]
+	return found && len(url) > 0
 }
 
 // Order struct represents a giftcard/reward order with the TangoCard API

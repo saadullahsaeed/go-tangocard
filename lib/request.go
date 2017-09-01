@@ -24,11 +24,6 @@ type GetOrdersRequest struct {
 	Page               int        `json:"page"`
 }
 
-// CreateOrderRequest represents the request to get a list of all orders
-type CreateOrderRequest struct {
-	CreateOrderCriteria CreateOrderCriteria `json:"createOrderCriteria"`
-}
-
 // sendRequest
 func sendRequest(host, method, url, username, password string, body interface{}) (json.RawMessage, error) {
 	if len(host) == 0 {
@@ -53,6 +48,12 @@ func sendRequest(host, method, url, username, password string, body interface{})
 	bodyjson, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+
+	if resp.StatusCode >= http.StatusBadRequest {
+		err := &ErrorResponse{}
+		json.Unmarshal(bodyjson, err)
+		return json.RawMessage(bodyjson), err
 	}
 	return json.RawMessage(bodyjson), nil
 }

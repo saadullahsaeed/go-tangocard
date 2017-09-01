@@ -5,9 +5,11 @@ Golang client for the Tangocard RaaS API.
 This is a Work in Progress.
 
 Currently supported methods:
+* Get Customers
 * Get Catalog
 * Get Orders
 * Create Order
+* Get Order Details
 
 
 ### Examples

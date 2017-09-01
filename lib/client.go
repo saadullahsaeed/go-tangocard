@@ -17,6 +17,13 @@ type Client struct {
 	Options            ClientOptions
 }
 
+// GetCustomers returns a list of all customers
+func (c *Client) GetCustomers() ([]*Customer, error) {
+	customers := []*Customer{}
+	err := c.requestAndParseResponse("GET", "/customers", nil, customers)
+	return customers, err
+}
+
 // GetCatalog gets all items in the Platform's Catalog
 func (c *Client) GetCatalog() (*GetCatalogResponse, error) {
 	cr := &GetCatalogResponse{}
@@ -35,6 +42,14 @@ func (c *Client) GetOrders(r *GetOrdersRequest) (*GetOrdersResponse, error) {
 func (c *Client) CreateOrder(r *CreateOrderCriteria) (*Order, error) {
 	or := &Order{}
 	err := c.requestAndParseResponse("POST", "/orders", r, or)
+	return or, err
+}
+
+// GetOrderDetails fetches detail for a specific order, identified by refOrderID
+func (c *Client) GetOrderDetails(refOrderID string) (*Order, error) {
+	or := &Order{}
+	path := fmt.Sprintf("/orders/%s", refOrderID)
+	err := c.requestAndParseResponse("GET", path, nil, or)
 	return or, err
 }
 
