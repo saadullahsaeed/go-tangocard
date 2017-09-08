@@ -8,6 +8,8 @@ This is a Work in Progress and I've so far only implemented the methods I needed
 
 Currently supported methods:
 * Get Customers
+* Get Accounts 
+* Get Account Details
 * Get Catalog
 * Get Orders
 * Create Order

@@ -10,6 +10,9 @@ const (
 // Account struct represents the accounts in the tango system
 type Account struct {
 	AccountIdentifier string     `json:"accountIdentifier"`
+	ContactEmail      string     `json:"contactEmail"`
+	CurrencyCode      string     `json:"currencyCode"`
+	CurrentBalance    float64    `json:"currentBalance"`
 	DisplayName       string     `json:"displayName"`
 	CreatedAt         *time.Time `json:"createdAt"`
 	Status            string     `json:"status"`

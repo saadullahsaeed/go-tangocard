@@ -11,6 +11,7 @@ import (
 
 var (
 	defaultIntegrationHost = "https://integration-api.tangocard.com/raas/v2"
+	productionAPIHost      = "https://integration-api.tangocard.com/raas/v2"
 )
 
 // GetOrdersRequest represents the request to get a list of all orders
@@ -24,8 +25,14 @@ type GetOrdersRequest struct {
 	Page               int        `json:"page"`
 }
 
+// APIResponse ...
+type APIResponse struct {
+	Body      json.RawMessage
+	RequestID string
+}
+
 // sendRequest
-func sendRequest(host, method, url, username, password string, body interface{}) (json.RawMessage, error) {
+func sendRequest(host, method, url, username, password string, body interface{}) (*APIResponse, error) {
 	if len(host) == 0 {
 		host = defaultIntegrationHost
 	}
@@ -34,7 +41,7 @@ func sendRequest(host, method, url, username, password string, body interface{})
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(string(jstr))
+
 	client := &http.Client{}
 	req, err := http.NewRequest(method, fmt.Sprintf("%s%s", host, url), bytes.NewBuffer(jstr))
 	req.Header.Add("Accept", "application/json")
@@ -50,10 +57,17 @@ func sendRequest(host, method, url, username, password string, body interface{})
 		return nil, err
 	}
 
-	if resp.StatusCode >= http.StatusBadRequest {
-		err := &ErrorResponse{}
-		json.Unmarshal(bodyjson, err)
-		return json.RawMessage(bodyjson), err
+	ar := &APIResponse{
+		RequestID: resp.Header.Get("x-request-id"),
 	}
-	return json.RawMessage(bodyjson), nil
+
+	if resp.StatusCode >= http.StatusBadRequest {
+		err := &ErrorResponse{RequestID: ar.RequestID}
+		json.Unmarshal(bodyjson, err)
+		ar.Body = json.RawMessage(bodyjson)
+		return ar, err
+	}
+
+	ar.Body = json.RawMessage(bodyjson)
+	return ar, err
 }

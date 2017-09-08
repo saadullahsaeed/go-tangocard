@@ -24,6 +24,21 @@ func (c *Client) GetCustomers() ([]*Customer, error) {
 	return customers, err
 }
 
+// GetAccounts returns a list of all customers
+func (c *Client) GetAccounts() ([]*Account, error) {
+	accounts := []*Account{}
+	err := c.requestAndParseResponse("GET", "/accounts", nil, accounts)
+	return accounts, err
+}
+
+// GetAccountDetails returns a list of all customers
+func (c *Client) GetAccountDetails(accountID string) (*Account, error) {
+	account := &Account{}
+	path := fmt.Sprintf("/accounts/%s", accountID)
+	err := c.requestAndParseResponse("GET", path, nil, account)
+	return account, err
+}
+
 // GetCatalog gets all items in the Platform's Catalog
 func (c *Client) GetCatalog() (*GetCatalogResponse, error) {
 	cr := &GetCatalogResponse{}
@@ -54,19 +69,19 @@ func (c *Client) GetOrderDetails(refOrderID string) (*Order, error) {
 }
 
 func (c *Client) requestAndParseResponse(method, url string, body interface{}, resObj interface{}) error {
-	js, err := c.request(method, url, body)
+	ar, err := c.request(method, url, body)
 	if err != nil {
 		return err
 	}
-	fmt.Println(string(js))
-	err = json.Unmarshal(js, &resObj)
+
+	err = json.Unmarshal(ar.Body, &resObj)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *Client) request(method, url string, body interface{}) (json.RawMessage, error) {
+func (c *Client) request(method, url string, body interface{}) (*APIResponse, error) {
 	return sendRequest(c.Options.Host, method, url, c.PlatformIdentifier, c.PlatformKey, body)
 }
 
