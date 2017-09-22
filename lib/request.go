@@ -56,6 +56,7 @@ func sendRequest(host, method, url, username, password string, body interface{})
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println(string(bodyjson))
 
 	ar := &APIResponse{
 		RequestID: resp.Header.Get("x-request-id"),

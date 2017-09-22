@@ -17,11 +17,33 @@ type Client struct {
 	Options            ClientOptions
 }
 
+// CreateCustomer ...
+func (c *Client) CreateCustomer(displayName, customerIdentifier string) (*Customer, error) {
+	customer := &Customer{
+		DisplayName:        displayName,
+		CustomerIdentifier: customerIdentifier,
+	}
+	err := c.requestAndParseResponse("POST", "/customers", customer, customer)
+	return customer, err
+}
+
 // GetCustomers returns a list of all customers
 func (c *Client) GetCustomers() ([]*Customer, error) {
 	customers := []*Customer{}
 	err := c.requestAndParseResponse("GET", "/customers", nil, customers)
 	return customers, err
+}
+
+// CreateAccount ...
+func (c *Client) CreateAccount(email, displayName, accountIdentifier, customerIdentifier string) (*Account, error) {
+	account := &Account{
+		ContactEmail:      email,
+		DisplayName:       displayName,
+		AccountIdentifier: accountIdentifier,
+	}
+	path := fmt.Sprintf("/customers/%s/accounts", customerIdentifier)
+	err := c.requestAndParseResponse("POST", path, account, account)
+	return account, err
 }
 
 // GetAccounts returns a list of all customers
