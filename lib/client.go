@@ -30,7 +30,7 @@ func (c *Client) CreateCustomer(displayName, customerIdentifier string) (*Custom
 // GetCustomers returns a list of all customers
 func (c *Client) GetCustomers() ([]*Customer, error) {
 	customers := []*Customer{}
-	err := c.requestAndParseResponse("GET", "/customers", nil, customers)
+	err := c.requestAndParseResponse("GET", "/customers", nil, &customers)
 	return customers, err
 }
 
@@ -49,7 +49,7 @@ func (c *Client) CreateAccount(email, displayName, accountIdentifier, customerId
 // GetAccounts returns a list of all customers
 func (c *Client) GetAccounts() ([]*Account, error) {
 	accounts := []*Account{}
-	err := c.requestAndParseResponse("GET", "/accounts", nil, accounts)
+	err := c.requestAndParseResponse("GET", "/accounts", nil, &accounts)
 	return accounts, err
 }
 
